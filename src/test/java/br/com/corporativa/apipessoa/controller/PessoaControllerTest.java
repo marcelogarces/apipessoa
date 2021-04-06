@@ -189,7 +189,26 @@ public class PessoaControllerTest {
 	                 response.andExpect(status().isNotFound())        
 	                 .andExpect(content().string("Pessoa não encontrada!"));
 	 }
+
 	 
+	 @Test
+	 @Order(14)
+	 public void consultarListagemComPessoasTest() throws Exception {
+		
+		 mockMvc.perform(
+	                post("/api/v1/pessoa")
+	                        .contentType(MediaType.APPLICATION_JSON)
+	                        .content(getPayloadRequestSucessoAddListagem()))
+	                .andExpect(content().string("Pessoa criada com sucesso!"))
+	                .andExpect(status().isCreated());
+		 
+		 
+		ResultActions response = mockMvc.perform(
+	                get(("/api/v1/pessoa"))
+	                        .contentType(MediaType.APPLICATION_JSON));
+	                 response.andExpect(status().isOk())        
+	                 .andExpect(content().string(containsString("Pedro da Silva")));
+	 }
 	
 	 
 	 private String getPayloadRequestSucesso() {
@@ -198,6 +217,15 @@ public class PessoaControllerTest {
 		 		"  \"dataNascimento\": \"1994-02-20\",\r\n" + 
 		 		"  \"email\": \"joao@gmail.com\",\r\n" + 
 		 		"  \"nome\": \"João da silva\"\r\n" + 
+		 		"}";
+	 }
+	 
+	 private String getPayloadRequestSucessoAddListagem() {
+		 return "{\r\n" + 
+		 		"  \"cpf\": \"58625151000\",\r\n" + 
+		 		"  \"dataNascimento\": \"1999-03-20\",\r\n" + 
+		 		"  \"email\": \"pedro@gmail.com\",\r\n" + 
+		 		"  \"nome\": \"Pedro da Silva\"\r\n" + 
 		 		"}";
 	 }
 	 

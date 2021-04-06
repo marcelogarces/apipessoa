@@ -34,7 +34,7 @@ public class PessoaController {
 	}
 	
 	@RequestMapping(value = "/cpf/{cpf}" ,method = RequestMethod.PUT)
-	public ResponseEntity<Object> alterarPessoa(@RequestBody PessoaEdicaoDTO pessoa,@PathVariable String cpf) throws Exception{
+	public ResponseEntity<Object> alterarPessoa(@Valid @RequestBody PessoaEdicaoDTO pessoa,@PathVariable String cpf) throws Exception{
 		pessoaService.alterarPessoa(pessoa,cpf);
 		Object body = "Pessoa atualizada com sucesso!";
 		return new ResponseEntity<Object>(body, HttpStatus.OK);
@@ -70,7 +70,13 @@ public class PessoaController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Pessoa> listarPessoas() {
-		return pessoaService.listarPessoas(); 
+	public ResponseEntity<?> listarPessoas() {
+			List<Pessoa> pessoas = pessoaService.listarPessoas();
+		if(pessoas!=null && !pessoas.isEmpty()) {
+			return ResponseEntity.ok().body(pessoas);
+		}else {
+			Object body = "Não existem pessoas cadastradas!";
+			return new ResponseEntity<Object>(body, HttpStatus.NOT_FOUND);
+		}
 	}
 }
